@@ -1,0 +1,16 @@
+import ReactDOM from "react-dom/client";
+import "./index.css";
+
+const router = createBrowserRouter(routes);
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { routes } from "./routes/index.tsx";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>
+);
