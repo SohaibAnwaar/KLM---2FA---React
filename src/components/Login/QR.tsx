@@ -8,7 +8,7 @@ const QR = () => {
   return (
     <div className="flex flex-col gap-24 justify-between">
       <div className="text-sm font-medium bg-[#041530] text-white">
-        Congratulations, you email has been verified!
+        Scan this QR Code
       </div>
       <img src={url} alt="" />
 

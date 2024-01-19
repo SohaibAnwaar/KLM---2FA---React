@@ -12,22 +12,23 @@ const Verifying = () => {
 
   return (
     <div className="flex flex-col gap-24 justify-between">
-      <div className="text-sm font-medium bg-[#041530] text-white">
-        Congratulations, you email has been verified!
-      </div>
-
       {isLoading && (
         <div className="flex justify-center">
           <Loader />
         </div>
       )}
       {!isLoading && !isError && (
-        <a
-          href="/auth/login"
-          className="text-indigo-600 hover:underline text-sm"
-        >
-          Login
-        </a>
+        <>
+          <div className="text-sm font-medium bg-[#041530] text-white">
+            Congratulations, you email has been verified!
+          </div>
+          <a
+            href="/auth/login"
+            className="text-indigo-600 hover:underline text-sm"
+          >
+            Login
+          </a>
+        </>
       )}
     </div>
   );
