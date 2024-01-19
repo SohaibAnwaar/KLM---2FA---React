@@ -2,6 +2,7 @@ import { FaRegUser } from "react-icons/fa6";
 import Input from "../shared/Input";
 import Button from "../shared/Button";
 import { FormData } from ".";
+import toast from "react-hot-toast";
 
 interface UsernameProps {
   formData: FormData;
@@ -27,18 +28,14 @@ const Username: React.FC<UsernameProps> = ({
         icon={<FaRegUser />}
         placeholder="ie: jhon.doe"
       />
-      <div className="flex justify-between items-center">
-        <a
-          href="/auth/recovery"
-          className="text-indigo-600 hover:underline text-sm"
-        >
-          Forgotten your username?
-        </a>
+      <div className="flex justify-end items-center">
         <Button
           isLoading={isLoading}
           title="Next"
           onClick={() =>
-            formData.username.length > 0 && setIsPasswordValid(true)
+            formData.username.length > 0
+              ? setIsPasswordValid(true)
+              : toast.error("Please enter your username")
           }
         />
       </div>

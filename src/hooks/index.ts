@@ -1,30 +1,42 @@
 import { useMutation, useQuery } from "react-query";
 import toast from "react-hot-toast";
-import AuthService, { SignInFormData, SignUpFormData } from "../util/services/auth.service";
+import AuthService, {  OTPData, PasswordReset, PasswordResetConfirm, ResendEmail, SignInFormData, SignUpFormData } from "../util/services/auth.service";
 import UserService, { AddItemData, Item } from "../util/services/item.service";
 
 
 export const useRegister = (onSuccess: () => void) => useMutation({
     mutationFn:  (formData: SignUpFormData) => AuthService.register(formData),
     onSuccess: () => {
-        toast.success("Registered Successfully!")
+        toast.success("Email verification link sent Successfully!")
         onSuccess();
     },
     onError: () => {
         toast.error("Something went wrong!")
     }
-
-
   }) 
 
-
-export const useLogin = (onSuccess: () => void) => useMutation({
-    mutationFn:  (formData: SignInFormData) => AuthService.login(formData),
+export const useRegisterAgain = () => useMutation({
+    mutationFn:  (formData: ResendEmail) => AuthService.registerAgain(formData),
     onSuccess: () => {
-        onSuccess();
+        toast.success("Email verification link sent again Successfully!")
     },
     onError: () => {
-        onSuccess();
+        toast.error("Something went wrong!")
+    }
+  }) 
+  
+export const useActivate = (data: string) => useQuery(
+    'activate',
+    () => AuthService.activate({key: data}),
+  );
+
+
+export const useLogin = (onSuccess: (data: any) => void) => useMutation({
+    mutationFn:  (formData: SignInFormData) => AuthService.login(formData),
+    onSuccess: (data) => {
+        onSuccess(data);
+    },
+    onError: () => {
         toast.error("Something went wrong!")
     }
 
@@ -32,6 +44,39 @@ export const useLogin = (onSuccess: () => void) => useMutation({
   }) 
 
 
+export const useVerifyOTP = (onSuccess: () => void) => useMutation({
+    mutationFn:  (data: OTPData) => AuthService.verifyOTP(data),
+    onSuccess: () => {
+      toast.success("OTP Verified Successfully!")
+      onSuccess();
+    },
+    onError: () => {
+        toast.error("Something went wrong!")
+    }
+  }) 
+
+
+export const useResetPassword = (onSuccess: () => void) => useMutation({
+    mutationFn:  (data: PasswordReset) => AuthService.resetPassword(data),
+    onSuccess: () => {
+      toast.success("Recovery link sent Successfully!")
+      onSuccess();
+    },
+    onError: () => {
+        toast.error("Something went wrong!")
+    }
+  }) 
+
+export const useResetConfirmPassword = (onSuccess: () => void) => useMutation({
+    mutationFn:  (data: PasswordResetConfirm) => AuthService.resetPasswordConfirm(data),
+    onSuccess: () => {
+      toast.success("Password Changed Successfully!")
+      onSuccess();
+    },
+    onError: () => {
+        toast.error("Something went wrong!")
+    }
+  }) 
 
 export const useAddItem = (onSuccess: () => void) => useMutation({
     mutationFn:  (formData: AddItemData) => UserService.addItem(formData),

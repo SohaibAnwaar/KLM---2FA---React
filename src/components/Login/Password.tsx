@@ -47,7 +47,7 @@ const Password: React.FC<PasswordProps> = ({
       </div>
       <div className="flex justify-between items-center">
         <a
-          href={"/auth/recovery/password"}
+          href={"/auth/recovery/password/confirm"}
           className="text-indigo-600 hover:underline text-sm"
         >
           Forgotten your password?

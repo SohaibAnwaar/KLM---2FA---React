@@ -1,181 +1,114 @@
-import { Toaster } from "react-hot-toast";
-import { useRegister } from "../../hooks";
-import { SignUpFormData } from "../../util/services/auth.service";
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import Loader from "../shared/Loader";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Input from "../shared/Input";
+import handleChange from "../../util/handleChange";
+import { FaRegUser } from "react-icons/fa6";
+import { RiLockPasswordLine, RiMailLine } from "react-icons/ri";
 
-const SignUp: React.FC = () => {
-  const [formData, setFormData] = useState<SignUpFormData>({
+import Button from "../shared/Button";
+import toast from "react-hot-toast";
+import { useRegister } from "../../hooks";
+
+export interface FormData {
+  email: string;
+  username: string;
+  password1: string;
+  password2: string;
+  name: string;
+}
+
+const Signup = () => {
+  const [formData, setFormData] = useState<FormData>({
     email: "",
-    username: "",
-    first_name: "",
-    last_name: "",
     password1: "",
     password2: "",
+    username: "",
+    name: "",
   });
-
   const navigate = useNavigate();
-
-  const { mutate, isLoading } = useRegister(() => navigate("/add"));
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const { mutate, isLoading } = useRegister(() =>
+    navigate("/auth/thankyou", { state: { ...formData } })
+  );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    if (formData.password1 !== formData.password2) {
+      toast.error("please enter same password in both fields");
+      return;
+    }
     mutate(formData);
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <Toaster />
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create an account
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your username
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="jhondoe878"
-                  required
-                />
-              </div>
+    <div className="">
+      <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+        <Input
+          name="username"
+          value={formData.username}
+          onChange={(e) => handleChange(e, setFormData)}
+          label="Enter your username"
+          disabled={isLoading}
+          icon={<FaRegUser />}
+          placeholder="ie: jhon.doe"
+        />
 
-              <div>
-                <label
-                  htmlFor="first_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your first name
-                </label>
-                <input
-                  type="text"
-                  name="first_name"
-                  id="first_name"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Jhon"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="last_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your last name
-                </label>
-                <input
-                  type="text"
-                  name="last_name"
-                  id="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Doe"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="password1"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password1"
-                  id="password1"
-                  value={formData.password1}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="password2"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Confirm password
-                </label>
-                <input
-                  type="password"
-                  name="password2"
-                  id="password2"
-                  value={formData.password2}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-              >
-                <span className="flex justify-center items-center gap-2">
-                  Create an account
-                  {isLoading && <Loader />}
-                </span>
-              </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Already have an account?{" "}
-                <a
-                  href="/login"
-                  className="font-medium text-indigo-600 hover:underline dark:text-indigo-500"
-                >
-                  Login here
-                </a>
-              </p>
-            </form>
-          </div>
-        </div>
+        <Input
+          name="name"
+          value={formData.name}
+          onChange={(e) => handleChange(e, setFormData)}
+          label="Enter your name"
+          disabled={isLoading}
+          icon={<FaRegUser />}
+          placeholder="ie: Jhon Doe"
+        />
+        <Input
+          name="email" // Change 'name' to 'email' for email input
+          value={formData.email}
+          onChange={(e) => handleChange(e, setFormData)}
+          label="Enter your email" // Change 'label' to 'Enter your email'
+          disabled={isLoading}
+          icon={<RiMailLine />}
+          type="email" // Change 'type' to 'email' for email input
+          placeholder="Your Email" // Change 'placeholder' to 'Your Email'
+        />
+
+        <Input
+          name="password1"
+          value={formData.password1}
+          onChange={(e) => handleChange(e, setFormData)}
+          label="Enter your password"
+          floatingLabel="Password"
+          disabled={isLoading}
+          icon={<RiLockPasswordLine />}
+          type="password"
+          placeholder="Your password"
+        />
+
+        <Input
+          name="password2"
+          value={formData.password2}
+          onChange={(e) => handleChange(e, setFormData)}
+          label="Confirm your password"
+          floatingLabel="Confirm Password"
+          disabled={isLoading}
+          icon={<RiLockPasswordLine />}
+          type="password"
+          placeholder="Confirm password"
+        />
+
+        <Button isLoading={isLoading} title="Sign Up" />
+      </form>
+
+      <div className="text-center mt-4">
+        <p className="text-sm text-gray-600">
+          Already have an account?{" "}
+          <a href="/auth/login" className="text-blue-500 hover:underline">
+            Login
+          </a>
+        </p>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default SignUp;
+export default Signup;

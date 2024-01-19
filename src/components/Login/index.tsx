@@ -17,7 +17,9 @@ const Login = () => {
   });
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const navigate = useNavigate();
-  const { mutate, isLoading } = useLogin(() => navigate("/add"));
+  const { mutate, isLoading } = useLogin((data) =>
+    navigate("/auth/qr/", { state: data })
+  );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,22 +28,32 @@ const Login = () => {
   };
 
   return (
-    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-      {isUsernameValid ? (
-        <Password
-          formData={formData}
-          handleChange={(e) => handleChange(e, setFormData)}
-          isLoading={isLoading}
-        />
-      ) : (
-        <Username
-          formData={formData}
-          handleChange={(e) => handleChange(e, setFormData)}
-          isLoading={isLoading}
-          setIsPasswordValid={setIsUsernameValid}
-        />
-      )}
-    </form>
+    <div className="">
+      <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+        {isUsernameValid ? (
+          <Password
+            formData={formData}
+            handleChange={(e) => handleChange(e, setFormData)}
+            isLoading={isLoading}
+          />
+        ) : (
+          <Username
+            formData={formData}
+            handleChange={(e) => handleChange(e, setFormData)}
+            isLoading={isLoading}
+            setIsPasswordValid={setIsUsernameValid}
+          />
+        )}
+      </form>
+      <div className="text-center mt-4">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{" "}
+          <a href="/auth/register" className="text-blue-500 hover:underline">
+            Sign up
+          </a>
+        </p>
+      </div>
+    </div>
   );
 };
 

@@ -9,6 +9,7 @@ const Input = ({
   label,
   icon,
   placeholder = "",
+  floatingLabel,
 }: IInputProps) => (
   <div className="flex flex-col gap-4">
     <label
@@ -22,7 +23,7 @@ const Input = ({
         <span className="absolute h-5 w-5 top-3 left-3 text-white">{icon}</span>
       )}
       <div className="text-sm font-medium p-0 px-2 bg-[#041530] text-indigo-600 absolute -top-2 left-3 focus:text-indigo-600 capitalize">
-        {name}
+        {floatingLabel || name}
       </div>
       <input
         type={type}
@@ -45,6 +46,7 @@ interface IInputProps {
   disabled: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
+  floatingLabel?: string;
   name: string;
   type?: "text" | "password" | "email" | "number";
   icon?: ReactNode | null;

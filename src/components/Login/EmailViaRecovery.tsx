@@ -3,26 +3,23 @@ import Input from "../shared/Input";
 import { TfiEmail } from "react-icons/tfi";
 import Button from "../shared/Button";
 import handleChange from "../../util/handleChange";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useResetPassword } from "../../hooks";
 interface FormData {
   email: string;
 }
-// interface IEmailViaRecoveryProps {
-//   isPasswordRecovery?: boolean;
-// }
 const EmailViaRecovery = () => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
   });
-  const { password } = useParams();
   const navigate = useNavigate();
-  //   const { mutate, isLoading } = useLogin(() => navigate("/add"));
+  const { mutate, isLoading } = useResetPassword(() =>
+    navigate("/auth/thankyou")
+  );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
-    navigate("/auth/thankyou/");
-    // mutate(formData);
+    mutate(formData);
   };
   return (
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
@@ -31,11 +28,8 @@ const EmailViaRecovery = () => {
         type="email"
         value={formData.email}
         onChange={(e) => handleChange(e, setFormData)}
-        label={`Enter your email to recieve a ${
-          password ? "recovery link" : " reminder"
-        }`}
-        //   disabled={isLoading}
-        disabled={false}
+        label={`Enter your email to recieve a recovery link`}
+        disabled={isLoading}
         placeholder="ie: jhondoe@company.com"
         icon={<TfiEmail />}
       />
@@ -43,7 +37,7 @@ const EmailViaRecovery = () => {
         <a href="#" className="text-indigo-600 hover:underline text-sm">
           Contact Customer Support
         </a>
-        <Button isLoading={false} title="Next" />
+        <Button isLoading={isLoading} title="Next" />
       </div>
     </form>
   );
